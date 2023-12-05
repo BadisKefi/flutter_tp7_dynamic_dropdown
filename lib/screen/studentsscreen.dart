@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_7/service/formationservice.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_7/entities/student.dart';
@@ -17,12 +18,15 @@ class _StudentScreenState extends State<StudentScreen> {
   double _currentFontSize = 0;
   List<Map<String, dynamic>> allClasses = [];
   Map<String, dynamic>? selectedClass;
+  List<Map<String, dynamic>> allFormations = [];
+  Map<String, dynamic>? selectedFormation;
   List<Map<String, dynamic>> filteredStudents = [];
   @override
   void initState() {
     super.initState();
     fetchAllClasses();
-    fetchStudentsThenFilterThem();
+    fetchAllFomations();
+    fetchStudentsThenFilterThemByClass();
   }
 
   Future<void> fetchAllClasses() async {
@@ -35,10 +39,22 @@ class _StudentScreenState extends State<StudentScreen> {
     });
   }
 
-  Future<void> fetchStudentsThenFilterThem() async {
+  Future<void> fetchAllFomations() async {
+    final formations = await getAllFormation();
+    setState(() {
+      allFormations = List<Map<String, dynamic>>.from(formations);
+      if (allFormations.isNotEmpty) {
+        selectedFormation = allFormations.first;
+      }
+    });
+  }
+
+  Future<void> fetchStudentsThenFilterThemByClass() async {
     final students = await getAllStudent();
     setState(() {
       filteredStudents = List<Map<String, dynamic>>.from(students);
+      print("----------------------------------");
+      print(filteredStudents);
       if (filteredStudents.isNotEmpty && selectedClass != null) {
         filteredStudents = filteredStudents
             .where((student) =>
@@ -48,9 +64,23 @@ class _StudentScreenState extends State<StudentScreen> {
     });
   }
 
+  Future<void> fetchStudentsThenFilterThemByFormation() async {
+    final students = await getAllStudent();
+    setState(() {
+      filteredStudents = List<Map<String, dynamic>>.from(students);
+      if (filteredStudents.isNotEmpty && selectedFormation != null) {
+        filteredStudents = filteredStudents
+            .where((student) =>
+                student['formation']?['id'] == selectedFormation?['id'])
+            .toList();
+      }
+    });
+  }
+
   refresh() {
     fetchAllClasses();
-    fetchStudentsThenFilterThem();
+    fetchAllFomations();
+    fetchStudentsThenFilterThemByClass();
     setState(() {});
   }
 
@@ -76,7 +106,26 @@ class _StudentScreenState extends State<StudentScreen> {
                 setState(() {
                   selectedClass = value;
                 });
-                fetchStudentsThenFilterThem();
+                fetchStudentsThenFilterThemByClass();
+              },
+            ),
+          if (allFormations.isNotEmpty)
+            DropdownButton<Map<String, dynamic>>(
+              value: selectedFormation,
+              items: allFormations
+                  .map<DropdownMenuItem<Map<String, dynamic>>>(
+                    (Map<String, dynamic> item) =>
+                        DropdownMenuItem<Map<String, dynamic>>(
+                      value: item,
+                      child: Text(item['nom']),
+                    ),
+                  )
+                  .toList(),
+              onChanged: (value) {
+                setState(() {
+                  selectedFormation = value;
+                });
+                fetchStudentsThenFilterThemByFormation();
               },
             ),
           Expanded(

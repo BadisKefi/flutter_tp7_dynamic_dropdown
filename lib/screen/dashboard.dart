@@ -35,6 +35,12 @@ class Dashboard extends StatelessWidget {
                 Navigator.pushNamed(context, '/formation');
               },
             ),
+            ListTile(
+              title: const Text('Matieres'),
+              onTap: () {
+                Navigator.pushNamed(context, '/matiere');
+              },
+            ),
           ],
         ),
       ),

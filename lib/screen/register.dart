@@ -14,7 +14,7 @@ class _RegisterState extends State<Register> {
   final _formKey = GlobalKey<FormState>();
   User user = User("", "");
 
-  String url = "http://10.0.2.2:8081/register";
+  String url = "http://192.168.31.215:8081/register";
   TextEditingController emailCtrl = TextEditingController();
   TextEditingController passwordCtrl = TextEditingController();
 

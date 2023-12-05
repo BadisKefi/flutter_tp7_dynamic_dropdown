@@ -4,9 +4,10 @@ import 'screen/classscreen.dart';
 import 'screen/formationscreen.dart';
 import 'screen/login.dart';
 import 'screen/studentsscreen.dart';
+import 'screen/matieresscreen.dart';
 
 // 10.0.2.2
-// 10.0.2.2
+// 192.168.31.215
 // localhost
 void main() => runApp(const MyApp());
 
@@ -22,7 +23,8 @@ class MyApp extends StatelessWidget {
         '/login': (context) => Login(),
         '/students': (context) => StudentScreen(),
         '/class': (context) => ClasseScreen(),
-        '/formation': (context) => FormationScreen()
+        '/formation': (context) => FormationScreen(),
+        '/matiere': (context) => MatiereScreen()
       },
     );
   }
